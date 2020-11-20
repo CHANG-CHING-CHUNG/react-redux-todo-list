@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { toggleTodo, deleteTodo } from "../redux/actions";
+import { toggleTodo, updateTodo, deleteTodo, editTodo } from "../redux/actions";
 import cx from "classnames";
 import styled from "styled-components";
 
-function MyTodo({ todo, toggleTodo, deleteTodo }) {
+function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
+  const [value, setValue] = useState("");
   const handleDeleteTodo = (id) => {
     deleteTodo(id);
   };
@@ -15,7 +16,10 @@ function MyTodo({ todo, toggleTodo, deleteTodo }) {
         "todo-item__text",
         todo && todo.completed && "todo-item__text--completed"
       )}
-      value={todo.content}
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value);
+      }}
     />
   ) : (
     <span
@@ -27,6 +31,39 @@ function MyTodo({ todo, toggleTodo, deleteTodo }) {
       {todo.content}
     </span>
   );
+
+  const EditTodo = (
+    <Button
+      className="edit-todo"
+      onClick={() => {
+        setValue(todo.content);
+        editTodo(todo.id);
+      }}
+    >
+      Edit Todo
+    </Button>
+  );
+  const UpdateTodo = (
+    <Button
+      className="update-todo"
+      onClick={() => {
+        updateTodo(todo.id, value);
+      }}
+    >
+      Update Todo
+    </Button>
+  );
+
+  const DeleteTodo = (
+    <Button
+      className="delete-todo"
+      onClick={() => {
+        handleDeleteTodo(todo.id);
+      }}
+    >
+      Delete Todo
+    </Button>
+  );
   return (
     <TodoWrapper>
       <li
@@ -36,15 +73,8 @@ function MyTodo({ todo, toggleTodo, deleteTodo }) {
         {todo && todo.isEditing ? "📝" : todo.completed ? "👌" : "👋"}{" "}
         {TodoContent}
       </li>
-      <Button className="edit-todo">Edit Todo</Button>
-      <Button
-        className="delete-todo"
-        onClick={() => {
-          handleDeleteTodo(todo.id);
-        }}
-      >
-        Delete Todo
-      </Button>
+      {todo.isEditing ? UpdateTodo : EditTodo}
+      {DeleteTodo}
     </TodoWrapper>
   );
 }
@@ -61,4 +91,6 @@ const Button = styled.button`
   margin-left: 0.5rem;
 `;
 
-export default connect(null, { toggleTodo, deleteTodo })(Todo);
+export default connect(null, { toggleTodo, updateTodo, deleteTodo, editTodo })(
+  Todo
+);
