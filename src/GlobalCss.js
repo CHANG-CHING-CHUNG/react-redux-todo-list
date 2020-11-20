@@ -1,4 +1,3 @@
-import { createStore } from "redux";
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`

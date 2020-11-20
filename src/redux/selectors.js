@@ -7,7 +7,7 @@ export const getTodoList = (store) => {
 };
 
 export const getTodoById = (store, id) => {
-  return getTodosState(store) ? { ...getTodosState(store).byIds[id].id } : {};
+  return getTodosState(store) ? { ...getTodosState(store).byIds[id], id } : {};
 };
 
 export const getTodos = (store) =>
@@ -17,7 +17,7 @@ export const getTodosByVisibilityFilter = (store, visibilityFilter) => {
   const allTodos = getTodos(store);
   switch (visibilityFilter) {
     case VISIBILITY_FILTERS.COMPLETED:
-      return allTodos.FILTER((todo) => todo.completed);
+      return allTodos.filter((todo) => todo.completed);
     case VISIBILITY_FILTERS.IMCOMPLETE:
       return allTodos.filter((todo) => !todo.completed);
     case VISIBILITY_FILTERS.ALL:

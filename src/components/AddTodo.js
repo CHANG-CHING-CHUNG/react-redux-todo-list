@@ -7,6 +7,7 @@ function MyAddTodo({ addTodo }) {
   const [value, setValue] = useState("");
   const handleAddTodo = () => {
     addTodo(value);
+    setValue("");
   };
   return (
     <div>
@@ -22,4 +23,4 @@ const AddTodo = styled(MyAddTodo)`
   margin-left: 0.5rem;
 `;
 
-export default AddTodo;
+export default connect(null, { addTodo })(AddTodo);
