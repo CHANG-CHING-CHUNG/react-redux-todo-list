@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import { toggleTodo, updateTodo, deleteTodo, editTodo } from "../redux/actions";
 import cx from "classnames";
@@ -10,6 +10,7 @@ function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
     deleteTodo(id);
   };
 
+  const inputRef = useRef();
   const TodoContent = todo.isEditing ? (
     <input
       className={cx(
@@ -19,6 +20,13 @@ function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
       value={value}
       onChange={(e) => {
         setValue(e.target.value);
+      }}
+      ref={inputRef}
+      autoFocus={true}
+      onBlur={() => {
+        setTimeout(() => {
+          inputRef.current.focus();
+        }, 10);
       }}
     />
   ) : (
