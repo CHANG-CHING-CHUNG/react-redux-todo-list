@@ -36,6 +36,7 @@ export default function todoReducer(state = initialState, action) {
           [id]: {
             ...state.byIds[id],
             content,
+            isEditing: !state.byIds[id].isEditing,
           },
         },
       };

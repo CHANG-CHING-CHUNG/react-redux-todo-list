@@ -73,7 +73,7 @@ function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
         {todo && todo.isEditing ? "📝" : todo.completed ? "👌" : "👋"}{" "}
         {TodoContent}
       </li>
-      {todo.isEditing ? UpdateTodo : EditTodo}
+      {todo.completed ? null : todo.isEditing ? UpdateTodo : EditTodo}
       {DeleteTodo}
     </TodoWrapper>
   );

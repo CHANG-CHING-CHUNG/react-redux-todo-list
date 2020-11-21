@@ -36,7 +36,7 @@ const VisibilityFilters = styled(MyVisibilityFilters)`
 `;
 
 const mapStateToProps = (state) => {
-  return { activeFilter: state.VisibilityFilters };
+  return { activeFilter: state.visibilityFilter };
 };
 
 export default connect(mapStateToProps, { setFilter })(VisibilityFilters);
