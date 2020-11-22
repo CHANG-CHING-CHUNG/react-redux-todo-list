@@ -6,6 +6,10 @@ export const GlobalStyle = createGlobalStyle`
   cursor: pointer;
   line-height: 1.5;
 }
+
+ .todo-item__text {
+   margin-right: 2rem;
+ }
 .todo-item__text--completed {
   text-decoration: line-through;
   color: lightgray;

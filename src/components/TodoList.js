@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 import { getTodosByVisibilityFilter } from "../redux/selectors";
 import styled from "styled-components";
 
-function MyTodoList({ todos }) {
+function MyTodoList({ todos, className }) {
   return (
-    <ul className="todo-list">
+    <ul className={className}>
       {todos && todos.length
         ? todos.map((todo) => {
             return <Todo key={`todo-${todo.id}`} todo={todo} />;
@@ -20,6 +20,9 @@ const TodoList = styled(MyTodoList)`
   margin-top: 1rem;
   text-align: left;
   list-style: none;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 `;
 
 const mapStateToProps = (state) => {

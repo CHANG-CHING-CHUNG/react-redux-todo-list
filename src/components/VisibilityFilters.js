@@ -3,9 +3,15 @@ import cx from "classnames";
 import { connect } from "react-redux";
 import { VISIBILITY_FILTERS } from "../constants";
 import { setFilter } from "../redux/actions";
+import { getTodos } from "../redux/selectors";
 import styled from "styled-components";
 
-function MyVisibilityFilters({ activeFilter, setFilter }) {
+function MyVisibilityFilters({ activeFilter, todos, setFilter }) {
+  console.log(
+    todos.some((todo) => {
+      return todo.isEditing === true;
+    })
+  );
   return (
     <div className="visibility-filters">
       {Object.keys(VISIBILITY_FILTERS).map((filterKey) => {
@@ -18,7 +24,10 @@ function MyVisibilityFilters({ activeFilter, setFilter }) {
               currentFilter === activeFilter && "filter--active"
             )}
             onClick={() => {
-              setFilter(currentFilter);
+              const isEditing = todos.some((todo) => todo.isEditing === true);
+              if (!isEditing) {
+                setFilter(currentFilter);
+              }
             }}
           >
             {currentFilter}
@@ -36,7 +45,10 @@ const VisibilityFilters = styled(MyVisibilityFilters)`
 `;
 
 const mapStateToProps = (state) => {
-  return { activeFilter: state.visibilityFilter };
+  return {
+    activeFilter: state.visibilityFilter,
+    todos: getTodos(state),
+  };
 };
 
 export default connect(mapStateToProps, { setFilter })(VisibilityFilters);

@@ -5,8 +5,6 @@ import {
   DELETE_TODO,
   TOGGLE_TODO,
   SET_FILTER,
-  IS_EDITING,
-  NOT_EDITING,
 } from "./actionTypes";
 
 let nextTodoId = 0;
@@ -49,13 +47,4 @@ export const toggleTodo = (id) => ({
 export const setFilter = (filter) => ({
   type: SET_FILTER,
   payload: { filter },
-});
-
-export const isEditing = () => ({
-  type: IS_EDITING,
-  payload: {},
-});
-export const notEditing = () => ({
-  type: NOT_EDITING,
-  payload: {},
 });

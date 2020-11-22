@@ -1,13 +1,53 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import { toggleTodo, updateTodo, deleteTodo, editTodo } from "../redux/actions";
+import { getTodos } from "../redux/selectors";
+import { checkEditing } from "../utilities";
 import cx from "classnames";
 import styled from "styled-components";
 
-function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
+function MyTodo({ todos, todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
   const [value, setValue] = useState("");
+
+  useEffect(() => {
+    let timer;
+    if (todo.isEditing && inputRef.current) {
+      timer = setInterval(() => {
+        inputRef.current.focus();
+      }, 10);
+    }
+    return () => clearInterval(timer);
+  }, [todo.isEditing]);
+
   const handleDeleteTodo = (id) => {
     deleteTodo(id);
+  };
+  const handleEditTodo = checkEditing((isEditing) => {
+    if (!isEditing) {
+      setValue(todo.content);
+      editTodo(todo.id);
+    }
+  }, todos);
+  const handleUpdateTodo = () => {
+    updateTodo(todo.id, value);
+  };
+
+  const handleToggleTodo = checkEditing((isEditing) => {
+    if (!isEditing) {
+      return !todo.isEditing ? toggleTodo(todo.id) : null;
+    }
+  }, todos);
+
+  const handleOnblur = (e) => {
+    let updateClassName;
+    let deleteClassName;
+    if (e.relatedTarget) {
+      updateClassName = e.relatedTarget.classList.contains("update-todo");
+      deleteClassName = e.relatedTarget.classList.contains("delete-todo");
+    }
+    if (!updateClassName && !deleteClassName) {
+      alert("請編輯完再進行其它操作!");
+    }
   };
 
   const inputRef = useRef();
@@ -23,11 +63,7 @@ function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
       }}
       ref={inputRef}
       autoFocus={true}
-      onBlur={() => {
-        setTimeout(() => {
-          inputRef.current.focus();
-        }, 10);
-      }}
+      onBlur={handleOnblur}
     />
   ) : (
     <span
@@ -41,23 +77,12 @@ function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
   );
 
   const EditTodo = (
-    <Button
-      className="edit-todo"
-      onClick={() => {
-        setValue(todo.content);
-        editTodo(todo.id);
-      }}
-    >
+    <Button className="edit-todo" onClick={handleEditTodo}>
       Edit Todo
     </Button>
   );
   const UpdateTodo = (
-    <Button
-      className="update-todo"
-      onClick={() => {
-        updateTodo(todo.id, value);
-      }}
-    >
+    <Button className="update-todo" onClick={handleUpdateTodo}>
       Update Todo
     </Button>
   );
@@ -74,21 +99,21 @@ function MyTodo({ todo, toggleTodo, updateTodo, deleteTodo, editTodo }) {
   );
   return (
     <TodoWrapper>
-      <li
-        className="todo-item"
-        onClick={() => (!todo.isEditing ? toggleTodo(todo.id) : null)}
-      >
+      <li className="todo-item" onClick={handleToggleTodo}>
         {todo && todo.isEditing ? "📝" : todo.completed ? "👌" : "👋"}{" "}
         {TodoContent}
       </li>
-      {todo.completed ? null : todo.isEditing ? UpdateTodo : EditTodo}
-      {DeleteTodo}
+      <div>
+        {todo.completed ? null : todo.isEditing ? UpdateTodo : EditTodo}
+        {DeleteTodo}
+      </div>
     </TodoWrapper>
   );
 }
 
 const TodoWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
 `;
 
 const Todo = styled(MyTodo)`
@@ -99,6 +124,15 @@ const Button = styled.button`
   margin-left: 0.5rem;
 `;
 
-export default connect(null, { toggleTodo, updateTodo, deleteTodo, editTodo })(
-  Todo
-);
+const mapStateToProps = (state) => {
+  return {
+    todos: getTodos(state),
+  };
+};
+
+export default connect(mapStateToProps, {
+  toggleTodo,
+  updateTodo,
+  deleteTodo,
+  editTodo,
+})(Todo);

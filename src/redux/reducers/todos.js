@@ -33,6 +33,7 @@ export default function todoReducer(state = initialState, action) {
       return {
         ...state,
         byIds: {
+          ...state.byIds,
           [id]: {
             ...state.byIds[id],
             content,
