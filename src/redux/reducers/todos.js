@@ -2,6 +2,7 @@ import {
   ADD_TODO,
   UPDATE_TODO,
   DELETE_TODO,
+  CLEAR_TODO,
   TOGGLE_TODO,
   EDIT_TODO,
 } from "../actionTypes";
@@ -68,6 +69,13 @@ export default function todoReducer(state = initialState, action) {
       return {
         allIds: state.allIds.filter((oldId) => oldId !== id),
         byIds: filteredByIds,
+      };
+    }
+    case CLEAR_TODO: {
+      const { allIds, byIds } = action.payload;
+      return {
+        allIds,
+        byIds,
       };
     }
     case TOGGLE_TODO: {

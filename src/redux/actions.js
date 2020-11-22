@@ -3,6 +3,7 @@ import {
   EDIT_TODO,
   UPDATE_TODO,
   DELETE_TODO,
+  CLEAR_TODO,
   TOGGLE_TODO,
   SET_FILTER,
 } from "./actionTypes";
@@ -36,6 +37,13 @@ export const deleteTodo = (id) => ({
   type: DELETE_TODO,
   payload: {
     id: id,
+  },
+});
+export const clearTodo = () => ({
+  type: CLEAR_TODO,
+  payload: {
+    allIds: [],
+    byIds: {},
   },
 });
 
